@@ -1,0 +1,3681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MediCare Assistant | Smart Medication Support</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f4f8fb;
+    color: #172b4d;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+#loginPage {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0f766e, #2563eb);
+    padding: 20px;
+}
+
+.login-card {
+    width: 430px;
+    max-width: 100%;
+    background: white;
+    border-radius: 22px;
+    padding: 35px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.logo-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    background: #0f766e;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.logo h1 {
+    font-size: 24px;
+}
+
+.logo span {
+    color: #0f766e;
+}
+
+.login-card h2 {
+    margin-bottom: 10px;
+}
+
+.login-card > p {
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d8e0e8;
+    border-radius: 10px;
+    outline: none;
+    font-size: 15px;
+}
+
+.input-group input:focus {
+    border-color: #0f766e;
+}
+
+.primary-btn {
+    border: none;
+    padding: 14px 20px;
+    border-radius: 10px;
+    background: #0f766e;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.primary-btn:hover {
+    background: #0b5f59;
+}
+
+.full-btn {
+    width: 100%;
+}
+
+.demo-note {
+    background: #f0fdfa;
+    border-left: 4px solid #0f766e;
+    padding: 12px;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.5;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+#app {
+    display: none;
+}
+
+.navbar {
+    height: 70px;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.nav-logo-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #0f766e;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.verified {
+    color: #15803d;
+    background: #dcfce7;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.logout-btn {
+    border: none;
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.layout {
+    display: flex;
+}
+
+.sidebar {
+    width: 240px;
+    background: #ffffff;
+    min-height: calc(100vh - 70px);
+    border-right: 1px solid #e5e7eb;
+    padding: 25px 15px;
+    position: fixed;
+}
+
+.sidebar button {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 13px 15px;
+    margin-bottom: 6px;
+    text-align: left;
+    border-radius: 9px;
+    cursor: pointer;
+    color: #475569;
+    font-size: 14px;
+}
+
+.sidebar button:hover,
+.sidebar button.active {
+    background: #ccfbf1;
+    color: #0f766e;
+    font-weight: bold;
+}
+
+.main {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    padding: 35px 5%;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.page-header {
+    margin-bottom: 25px;
+}
+
+.page-header h2 {
+    font-size: 28px;
+    margin-bottom: 7px;
+}
+
+.page-header p {
+    color: #64748b;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.welcome {
+    background: linear-gradient(120deg, #0f766e, #2563eb);
+    color: white;
+    padding: 30px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+}
+
+.welcome h2 {
+    margin-bottom: 8px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 22px;
+    border-radius: 15px;
+    border: 1px solid #e5e7eb;
+}
+
+.stat-card .icon {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.stat-card h3 {
+    font-size: 26px;
+}
+
+.stat-card p {
+    color: #64748b;
+    margin-top: 5px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+}
+
+.card h3 {
+    margin-bottom: 18px;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.action-btn {
+    border: 1px solid #dbe5e9;
+    background: #f8fafc;
+    padding: 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.action-btn:hover {
+    background: #f0fdfa;
+    border-color: #0f766e;
+}
+
+.action-btn strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.action-btn small {
+    color: #64748b;
+}
+
+/* =========================
+   SCANNER
+========================= */
+
+.upload-box {
+    border: 2px dashed #94a3b8;
+    border-radius: 18px;
+    padding: 40px 20px;
+    text-align: center;
+    background: white;
+    cursor: pointer;
+    transition: 0.2s;
+    display: block;
+}
+
+.upload-box:hover {
+    border-color: #0f766e;
+    background: #f0fdfa;
+}
+
+.upload-icon {
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+
+.upload-box h3 {
+    margin-bottom: 8px;
+}
+
+.upload-box p {
+    color: #64748b;
+}
+
+#fileInput {
+    display: none;
+}
+
+.file-name {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #0f766e;
+}
+
+.preview-container {
+    display: none;
+    margin-top: 20px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.preview-container h3 {
+    margin-bottom: 15px;
+}
+
+#imagePreview {
+    max-width: 100%;
+    max-height: 350px;
+    display: block;
+    margin: auto;
+    border-radius: 10px;
+}
+
+.pdf-preview {
+    padding: 30px;
+    background: #f8fafc;
+    text-align: center;
+    border-radius: 10px;
+    color: #475569;
+}
+
+/* =========================
+   DEMO DATA
+========================= */
+
+.demo-section {
+    margin-top: 25px;
+}
+
+.demo-section h3 {
+    margin-bottom: 15px;
+}
+
+.demo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.demo-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.demo-card:hover {
+    border-color: #0f766e;
+    transform: translateY(-2px);
+}
+
+.demo-card strong {
+    display: block;
+    margin-bottom: 7px;
+}
+
+.demo-card small {
+    color: #64748b;
+    line-height: 1.4;
+}
+
+/* =========================
+   ANALYSIS
+========================= */
+
+.analysis {
+    display: none;
+    margin-top: 25px;
+}
+
+.analysis-card {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid #e5e7eb;
+}
+
+.loading {
+    text-align: center;
+    padding: 30px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #d1fae5;
+    border-top-color: #0f766e;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.result-row:last-child {
+    border-bottom: none;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.badge.green {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.badge.yellow {
+    background: #fef3c7;
+    color: #a16207;
+}
+
+.warning {
+    background: #fff7ed;
+    border-left: 4px solid #f97316;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 7px;
+    line-height: 1.5;
+}
+
+.safe-box {
+    background: #f0fdf4;
+    border-left: 4px solid #22c55e;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 7px;
+}
+
+/* =========================
+   medicine
+========================= */
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 14px;
+    border: 1px solid #d5dde5;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+.search-btn {
+    padding: 14px 22px;
+    border: none;
+    background: #0f766e;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.medicine-result {
+    display: none;
+}
+
+.medicine-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.medicine-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 15px;
+    background: #dbeafe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.info-item {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.info-item span {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+/* =========================
+   HISTORY
+========================= */
+
+.history-item {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-item small {
+    color: #64748b;
+}
+
+.empty-history {
+    text-align: center;
+    padding: 40px;
+    color: #64748b;
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-card {
+    max-width: 700px;
+}
+
+.profile-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.profile-row span {
+    color: #64748b;
+}
+
+/* =========================
+   PROFILE FORM
+========================= */
+
+.profile-field {
+    margin-top: 20px;
+}
+
+
+.profile-field label {
+    display: block;
+
+    font-weight: 600;
+
+    color: #0f172a;
+
+    margin-bottom: 8px;
+}
+
+
+.profile-field input,
+.profile-field select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 12px 14px;
+
+    border: 1px solid #d5dde5;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #0f172a;
+
+    font-size: 15px;
+
+    font-family: inherit;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+
+.profile-field input:focus,
+.profile-field select:focus {
+    border-color: #0f766e;
+
+    box-shadow:
+        0 0 0 3px rgba(
+            15,
+            118,
+            110,
+            0.12
+        );
+}
+
+
+.profile-field input[readonly] {
+    background: #f8fafc;
+
+    color: #334155;
+
+    cursor: pointer;
+}
+
+
+.profile-field small {
+    display: block;
+
+    margin-top: 6px;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+.required {
+    color: #dc2626;
+
+    font-weight: 700;
+}
+
+
+.optional {
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 400;
+
+    margin-left: 5px;
+}
+
+
+/* Profile rows */
+
+.profile-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 16px 0;
+
+    border-bottom:
+        1px solid #e5e7eb;
+}
+
+
+.profile-row strong {
+    color: #0f172a;
+}
+
+
+/* Save button */
+
+.profile-card .primary-btn {
+    background: #0f766e;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 13px 18px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s,
+        transform 0.1s;
+}
+
+
+.profile-card .primary-btn:hover {
+    background: #115e59;
+}
+
+
+.profile-card .primary-btn:active {
+    transform: scale(0.99);
+}
+
+/* =========================
+   SAFETY
+========================= */
+
+.safety-card {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 15px;
+    padding: 22px;
+    margin-bottom: 18px;
+}
+
+.safety-card h3 {
+    margin-bottom: 10px;
+}
+
+.safety-card p {
+    color: #57534e;
+    line-height: 1.6;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .demo-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .navbar {
+        padding: 0 15px;
+    }
+
+    .sidebar {
+        width: 70px;
+        padding: 20px 8px;
+    }
+
+    .sidebar button {
+        font-size: 0;
+        text-align: center;
+        padding: 13px 5px;
+    }
+
+    .sidebar button::first-letter {
+        font-size: 20px;
+    }
+
+    .main {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+        padding: 25px 15px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .info-grid,
+    .demo-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .verified {
+        display: none;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+
+    .result-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
+<section id="loginPage">
+
+    <div class="login-card">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                ✚
+            </div>
+
+            <h1>
+                Medi<span>Care</span>
+            </h1>
+
+        </div>
+
+
+        <h2 id="authTitle">
+            Welcome to MediCare
+        </h2>
+
+
+        <p id="authSubtitle">
+            Secure access to your medication assistance dashboard.
+        </p>
+
+
+        <!-- LOGIN FORM -->
+
+        <div id="loginForm">
+
+            <div class="input-group">
+
+                <label>
+                    Patient Name
+                </label>
+
+                <input
+                    type="text"
+                    id="patientName"
+                    placeholder="Enter your name"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+                    Patient ID
+                </label>
+
+                <input
+                    type="text"
+                    id="patientId"
+                    placeholder="Example: MC-10001"
+                >
+
+            </div>
+
+
+            <button
+                class="primary-btn full-btn"
+                onclick="login()"
+            >
+                ✓ Login
+            </button>
+
+
+            <p style="text-align:center; margin-top:15px;">
+
+                New patient?
+
+                <button
+                    type="button"
+                    onclick="showRegister()"
+                >
+                    Create Patient ID
+                </button>
+
+            </p>
+
+        </div>
+
+
+        <!-- REGISTRATION FORM -->
+
+        <div
+            id="registerForm"
+            style="display:none;"
+        >
+
+            <div class="input-group">
+
+                <label>
+                    Patient Name
+                </label>
+
+                <input
+                    type="text"
+                    id="registerName"
+                    placeholder="Enter your full name"
+                >
+
+            </div>
+
+
+            <button
+                class="primary-btn full-btn"
+                onclick="registerPatient()"
+            >
+                Create Patient ID
+            </button>
+
+
+            <p style="text-align:center; margin-top:15px;">
+
+                Already registered?
+
+                <button
+                    type="button"
+                    onclick="showLogin()"
+                >
+                    Login
+                </button>
+
+            </p>
+
+        </div>
+
+
+        <div class="demo-note">
+
+            <strong>Hackathon Demo:</strong>
+
+            Your Patient ID is generated automatically
+            when you register.
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     APPLICATION
+===================================================== -->
+
+<div id="app">
+
+<nav class="navbar">
+
+    <div class="nav-logo">
+
+        <div class="nav-logo-icon">
+            ✚
+        </div>
+
+        <span>
+            MediCare Assistant
+        </span>
+
+    </div>
+
+    <div class="nav-right">
+
+        <span class="verified">
+            ✓ Patient Verified
+        </span>
+
+        <button
+            class="logout-btn"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+
+<div class="layout">
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+    <button
+        class="active"
+        onclick="showPage('dashboard', this)"
+    >
+        🏠 Dashboard
+    </button>
+
+    <button
+        onclick="showPage('scanner', this)"
+    >
+        📄 Prescription Scanner
+    </button>
+
+    <button
+        onclick="showPage('medicine', this)"
+    >
+        💊 Medicine Identifier
+    </button>
+
+    <button
+        onclick="showPage('history', this)"
+    >
+        📋 Patient History
+    </button>
+
+    <button
+        onclick="showPage('profile', this)"
+    >
+        👤 My Profile
+    </button>
+
+    <button
+        onclick="showPage('safety', this)"
+    >
+        ⚠️ Safety Center
+    </button>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section
+    id="dashboard"
+    class="page active"
+>
+
+<div class="welcome">
+
+    <h2>
+        Welcome,
+        <span id="welcomeName">
+            Patient
+        </span>
+        👋
+    </h2>
+
+    <p>
+        Understand prescriptions. Identify medicines.
+        Stay informed.
+    </p>
+
+</div>
+
+
+<div class="stats">
+
+    <div class="stat-card">
+
+        <div class="icon">
+            💊
+        </div>
+
+        <h3 id="medicineCount">
+            0
+        </h3>
+
+        <p>
+            Medicines tracked
+        </p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="icon">
+            📄
+        </div>
+
+        <h3 id="reportCount">
+            0
+        </h3>
+
+        <p>
+            Reports analyzed
+        </p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="icon">
+            ✓
+        </div>
+
+        <h3>
+            100%
+        </h3>
+
+        <p>
+            Profile verified
+        </p>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="icon">
+            🛡️
+        </div>
+
+        <h3>
+            Safe
+        </h3>
+
+        <p>
+            Assistance status
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="dashboard-grid">
+
+<div class="card">
+
+<h3>
+    Quick Actions
+</h3>
+
+<div class="quick-actions">
+
+<button
+    class="action-btn"
+    onclick="openScanner()"
+>
+
+<strong>
+    📄 Scan Prescription
+</strong>
+
+<small>
+    Upload and understand a prescription
+</small>
+
+</button>
+
+
+<button
+    class="action-btn"
+    onclick="openMedicine()"
+>
+
+<strong>
+    💊 Identify medicine
+</strong>
+
+<small>
+    Search medicine by code or name
+</small>
+
+</button>
+
+
+<button
+    class="action-btn"
+    onclick="showPage('history')"
+>
+
+<strong>
+    📋 Patient History
+</strong>
+
+<small>
+    View previous analyses
+</small>
+
+</button>
+
+
+<button
+    class="action-btn"
+    onclick="showPage('safety')"
+>
+
+<strong>
+    ⚠️ Safety Center
+</strong>
+
+<small>
+    Medication safety information
+</small>
+
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+    How Medicare Assistant Works
+</h3>
+
+<div class="result-row">
+
+<strong>
+    01
+</strong>
+
+<span>
+    Upload prescription
+</span>
+
+</div>
+
+<div class="result-row">
+
+<strong>
+    02
+</strong>
+
+<span>
+    OCR extracts information
+</span>
+
+</div>
+
+<div class="result-row">
+
+<strong>
+    03
+</strong>
+
+<span>
+    AI explains the medicine
+</span>
+
+</div>
+
+<div class="result-row">
+
+<strong>
+    04
+</strong>
+
+<span>
+    Safety warnings are shown
+</span>
+
+</div>
+
+<div class="result-row">
+
+<strong>
+    05
+</strong>
+
+<span>
+    Result saved to history
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     SCANNER
+===================================================== -->
+
+<section
+    id="scanner"
+    class="page"
+>
+
+<div class="page-header">
+
+<h2>
+    Prescription & Report Scanner
+</h2>
+
+<p>
+    Upload a prescription/report or use a demo document
+    for the hackathon presentation.
+</p>
+
+</div>
+
+
+<label
+    class="upload-box"
+    for="fileInput"
+>
+
+<div class="upload-icon">
+    📄
+</div>
+
+<h3>
+    Upload Prescription / Report
+</h3>
+
+<p>
+    JPG, PNG or PDF supported
+</p>
+
+<div
+    class="file-name"
+    id="fileName"
+></div>
+
+</label>
+
+
+<input
+    type="file"
+    id="fileInput"
+    accept=".jpg,.jpeg,.png,.pdf"
+    onchange="fileSelected(event)"
+>
+
+
+<!-- PREVIEW -->
+
+<div
+    class="preview-container"
+    id="previewContainer"
+>
+
+<h3>
+    Document Preview
+</h3>
+
+<img
+    id="imagePreview"
+    alt="Prescription Preview"
+>
+
+<div
+    id="pdfPreview"
+    class="pdf-preview"
+    style="display:none;"
+>
+    📕 PDF document selected
+</div>
+
+</div>
+
+
+<button
+    class="primary-btn"
+    style="margin-top:20px;"
+    onclick="analyzePrescription()"
+>
+
+🧠 Analyze Document
+
+</button>
+
+
+<!-- DEMO PRESCRIPTIONS -->
+
+
+<!-- ANALYSIS -->
+
+<div
+    id="analysis"
+    class="analysis"
+>
+
+<div class="analysis-card">
+
+<div id="loading">
+
+<div class="loading">
+
+<div class="spinner"></div>
+
+<p style="margin-top:15px;">
+    OCR + AI is analyzing the document...
+</p>
+
+<p
+    style="font-size:13px;color:#64748b;margin-top:8px;"
+>
+    Extracting medicine names, dosage and instructions
+</p>
+
+</div>
+
+</div>
+
+
+<div
+    id="analysisResult"
+    style="display:none;"
+>
+
+<h3>
+    🧠 AI/OCR Extraction Result
+</h3>
+
+<br>
+
+
+<div class="result-row">
+
+<strong>
+    Medicine
+</strong>
+
+<span id="resultMedicine">
+    -
+</span>
+
+</div>
+
+
+<div class="result-row">
+
+<strong>
+    Purpose
+</strong>
+
+<span id="resultPurpose">
+    -
+</span>
+
+</div>
+
+
+<div class="result-row">
+
+<strong>
+    Dosage 
+</strong>
+
+<span id="resultDosage">
+    -
+</span>
+
+</div>
+
+
+<div class="result-row">
+
+<strong>
+    Frequency
+</strong>
+
+<span id="resultFrequency">
+    -
+</span>
+
+</div>
+
+
+<div class="result-row">
+
+<strong>
+    Duration
+</strong>
+
+<span id="resultDuration">
+    -
+</span>
+
+</div>
+
+
+<div class="result-row">
+
+<strong>
+    OCR confidence
+</strong>
+
+<span
+    id="resultConfidence"
+    class="badge green"
+>
+    -
+</span>
+
+</div>
+
+
+<div class="safe-box">
+
+<strong>
+    💡 Simple explanation
+</strong>
+
+<p
+    id="resultExplanation"
+    style="margin-top:8px;"
+>
+    -
+</p>
+
+</div>
+
+
+<div class="warning">
+
+<strong>
+    ⚠️ Safety warning
+</strong>
+
+<p
+    id="resultWarning"
+    style="margin-top:8px;"
+>
+    -
+</p>
+
+</div>
+
+
+<div
+    class="warning"
+    style="background:#eff6ff;border-color:#3b82f6;"
+>
+
+<strong>
+    👨‍⚕️ Verification required
+</strong>
+
+<p style="margin-top:8px;">
+
+This system helps interpret the document.
+It does not prescribe or change medication.
+
+If the handwriting, medicine name or dosage is unclear,
+confirm it with the prescribing doctor or pharmacist.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     medicine IDENTIFIER
+===================================================== -->
+
+<section
+    id="medicine"
+    class="page"
+>
+
+<div class="page-header">
+
+<h2>
+    Medicine Identifier
+</h2>
+
+<p>
+    Search using a medicine code, serial number or medicine name.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<div class="search-box">
+
+<input
+    type="text"
+    id="medicineCode"
+    placeholder="Example: MED5001 or Metformin"
+>
+
+<button
+    class="search-btn"
+    onclick="identifyMedicine()"
+>
+    🔎 Search
+</button>
+
+</div>
+
+
+<div
+    id="medicineResult"
+    class="medicine-result"
+>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     HISTORY
+===================================================== -->
+
+<section
+    id="history"
+    class="page"
+>
+
+<div class="page-header">
+
+<h2>
+    Patient History
+</h2>
+
+<p>
+    Previous prescription and medicine analysis results.
+</p>
+
+</div>
+
+
+<div id="historyContainer">
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     PROFILE
+===================================================== -->
+
+<section
+    id="profile"
+    class="page"
+>
+
+    <div class="page-header">
+
+        <h2>
+            My Profile
+        </h2>
+
+        <p>
+            Manage your personal information.
+        </p>
+
+    </div>
+
+
+    <div class="card profile-card">
+
+        <!-- Patient ID -->
+
+        <div class="profile-row">
+
+            <span>
+                Patient ID
+            </span>
+
+            <strong id="profileId">
+                MC-00000
+            </strong>
+
+        </div>
+
+
+        <!-- Patient Name -->
+
+        <div class="profile-field">
+
+            <label>
+                Full Name
+                <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="profileNameInput"
+                readonly
+                onfocus="showNameMessage()"
+                onblur="hideNameMessage()"
+            >
+
+            <small
+                id="nameMessage"
+                style="display:none;"
+            >
+                Name cannot be changed from this profile.
+            </small>
+
+        </div>
+
+
+        <!-- Age -->
+
+        <div class="profile-field">
+
+            <label>
+                Age
+                <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="profileAge"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="3"
+                placeholder="Enter your age"
+            >
+
+        </div>
+
+
+        <!-- Gender -->
+
+        <div class="profile-field">
+
+            <label>
+                Gender
+                <span class="required">*</span>
+            </label>
+
+            <select id="profileGender">
+
+                <option value="">
+                    Select gender
+                </option>
+
+                <option value="Male">
+                    Male
+                </option>
+
+                <option value="Female">
+                    Female
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+                <option value="Prefer not to say">
+                    Prefer not to say
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Phone -->
+
+        <div class="profile-field">
+
+            <label>
+                Phone Number
+                <span class="required">*</span>
+            </label>
+
+            <input
+                type="tel"
+                id="profilePhone"
+                placeholder="Enter phone number"
+            >
+
+        </div>
+
+
+        <!-- Email -->
+
+        <div class="profile-field">
+
+            <label>
+                Email
+                <span class="optional">
+                    Optional
+                </span>
+            </label>
+
+            <input
+                type="email"
+                id="profileEmail"
+                placeholder="Enter email address"
+            >
+
+        </div>
+
+
+        <!-- Blood Group -->
+
+        <div class="profile-field">
+
+            <label>
+                Blood Group
+                <span class="optional">
+                    Optional
+                </span>
+            </label>
+
+            <select id="profileBloodGroup">
+
+                <option value="">
+                    Select blood group
+                </option>
+
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Verification -->
+
+        <div class="profile-row">
+
+            <span>
+                Verification
+            </span>
+
+            <strong style="color:#15803d;">
+                ✓ Verified
+            </strong>
+
+        </div>
+
+
+        <!-- Account Type -->
+
+        <div class="profile-row">
+
+            <span>
+                Account Type
+            </span>
+
+            <strong>
+                Patient
+            </strong>
+
+        </div>
+
+
+        <!-- Save Button -->
+
+        <button
+            type="button"
+            class="primary-btn"
+            onclick="savePatientProfile()"
+            style="margin-top:20px; width:100%;"
+        >
+            💾 Save Changes
+        </button>
+
+
+        <p
+            style="
+                margin-top:12px;
+                font-size:13px;
+                color:#64748b;
+                text-align:center;
+            "
+        >
+            Fields marked with * are required.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SAFETY
+===================================================== -->
+
+<section
+    id="safety"
+    class="page"
+>
+
+<div class="page-header">
+
+<h2>
+    Safety Center
+</h2>
+
+<p>
+    Important information before using medication assistance tools.
+</p>
+
+</div>
+
+
+<div class="safety-card">
+
+<h3>
+    ⚠️ AI is not a doctor
+</h3>
+
+<p>
+    Medicare Assistant explains information found in prescriptions
+    and reports. It does not diagnose diseases or prescribe medicine.
+</p>
+
+</div>
+
+
+<div class="safety-card">
+
+<h3>
+    💊 Dosage must be verified
+</h3>
+
+<p>
+    The application displays dosage information detected from the
+    prescription. It must not modify or invent the dosage.
+    Follow your healthcare professional's instructions.
+</p>
+
+</div>
+
+
+<div class="safety-card">
+
+<h3>
+    📄 Unclear handwriting
+</h3>
+
+<p>
+    If OCR confidence is low, the system should flag the prescription
+    instead of guessing the medicine.
+</p>
+
+</div>
+
+
+<div class="safety-card">
+
+<h3>
+    🔐 Privacy
+</h3>
+
+<p>
+    This hackathon prototype does not store real Aadhaar information.
+    A production system should use authorized identity verification,
+    proper encryption and applicable healthcare privacy controls.
+</p>
+
+</div>
+
+</section>
+
+
+</main>
+
+</div>
+
+</div>
+
+
+<script>
+
+function viewPrescription(filename) {
+
+    window.open(
+        `http://127.0.0.1:5000/api/prescription-file/${encodeURIComponent(filename)}`,
+        "_blank"
+    );
+
+}
+
+
+async function deletePrescription(id) {
+
+    const confirmed =
+        confirm(
+            "Delete this prescription permanently?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response = await fetch(
+            `http://127.0.0.1:5000/api/prescription/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            alert(
+                data.message ||
+                "Could not delete prescription."
+            );
+
+            return;
+        }
+
+
+        alert(
+            "Prescription deleted successfully."
+        );
+
+
+        await loadHistory();
+
+        await updateDashboardStats();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Delete error:",
+            error
+        );
+
+
+        alert(
+            "Could not connect to the backend."
+        );
+
+    }
+
+}
+
+/* =====================================================
+   DEMO PRESCRIPTION DATABASE
+===================================================== */
+
+const demoPrescriptions = [
+
+{
+    id: "RX-001",
+    medicine: "Metformin 500 mg",
+    purpose: "Blood sugar management",
+    dosage: "1 tablet after breakfast and dinner",
+    frequency: "Twice daily",
+    duration: "30 days",
+    confidence: "96%",
+    explanation:
+        "Metformin is commonly used to help manage blood glucose levels in people with type 2 diabetes.",
+    warning:
+        "Take only according to the prescription. Gastrointestinal side effects can occur. Confirm instructions with your healthcare professional."
+},
+
+{
+    id: "RX-002",
+    medicine: "Amoxicillin 500 mg",
+    purpose: "Treatment of certain bacterial infections",
+    dosage: "1 capsule every 8 hours",
+    frequency: "Three times daily",
+    duration: "5 days",
+    confidence: "94%",
+    explanation:
+        "Amoxicillin is an antibiotic used to treat certain bacterial infections.",
+    warning:
+        "Antibiotics should only be taken when prescribed. Do not stop or change the course without medical advice."
+},
+
+{
+    id: "RX-003",
+    medicine: "Pantoprazole 40 mg",
+    purpose: "Reduction of stomach acid",
+    dosage: "1 tablet before breakfast",
+    frequency: "Once daily",
+    duration: "14 days",
+    confidence: "97%",
+    explanation:
+        "Pantoprazole reduces stomach acid and may be prescribed for acid reflux or other acid-related conditions.",
+    warning:
+        "Use according to your prescription. If symptoms continue or worsen, contact your healthcare professional."
+},
+
+{
+    id: "RX-004",
+    medicine: "Amlodipine 5 mg",
+    purpose: "Blood pressure management",
+    dosage: "1 tablet once daily",
+    frequency: "Once daily",
+    duration: "30 days",
+    confidence: "95%",
+    explanation:
+        "Amlodipine is commonly used to help manage high blood pressure and certain heart-related conditions.",
+    warning:
+        "Do not change the dose without medical advice. Dizziness or swelling may occur in some people."
+},
+
+{
+    id: "RX-005",
+    medicine: "Cetirizine 10 mg",
+    purpose: "Relief of allergy symptoms",
+    dosage: "1 tablet at night",
+    frequency: "Once daily",
+    duration: "10 days",
+    confidence: "98%",
+    explanation:
+        "Cetirizine is an antihistamine commonly used to relieve allergy symptoms such as sneezing and itching.",
+    warning:
+        "May cause drowsiness in some people. Avoid activities requiring alertness if affected."
+}
+
+];
+
+
+/* =====================================================
+   medicine DATABASE
+===================================================== */
+
+const medicines = [
+
+{
+    code: "MED5001",
+    names: ["METFORMIN", "METFORMIN 500", "MET500"],
+    medicine: "Metformin 500 mg",
+    manufacturer: "Example Pharmaceutical Ltd.",
+    type: "Tablet",
+    purpose: "Blood sugar management",
+    warning:
+        "Use only according to a healthcare professional's instructions."
+},
+
+{
+    code: "MED5002",
+    names: ["AMOXICILLIN", "AMOXICILLIN 500", "AMOX500"],
+    medicine: "Amoxicillin 500 mg",
+    manufacturer: "Example Pharma Ltd.",
+    type: "Capsule",
+    purpose: "Certain bacterial infections",
+    warning:
+        "Antibiotic. Use only when prescribed."
+},
+
+{
+    code: "MED5003",
+    names: ["PANTOPRAZOLE", "PANTO40", "PANTOPRAZOLE 40"],
+    medicine: "Pantoprazole 40 mg",
+    manufacturer: "Example Pharma Ltd.",
+    type: "Tablet",
+    purpose: "Reduction of stomach acid",
+    warning:
+        "Use according to prescription."
+},
+
+{
+    code: "MED5004",
+    names: ["AMLODIPINE", "AMLO5", "AMLODIPINE 5"],
+    medicine: "Amlodipine 5 mg",
+    manufacturer: "Example Pharma Ltd.",
+    type: "Tablet",
+    purpose: "Blood pressure management",
+    warning:
+        "Do not change dose without medical advice."
+},
+
+{
+    code: "MED5005",
+    names: ["CETIRIZINE", "CET10", "CETIRIZINE 10"],
+    medicine: "Cetirizine 10 mg",
+    manufacturer: "Example Pharma Ltd.",
+    type: "Tablet",
+    purpose: "Allergy symptom relief",
+    warning:
+        "May cause drowsiness in some people."
+}
+
+];
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+async function login() {
+
+    const name =
+        document
+            .getElementById("patientName")
+            .value
+            .trim();
+
+    const patientId =
+        document
+            .getElementById("patientId")
+            .value
+            .trim();
+
+
+    if (!name || !patientId) {
+
+        alert(
+            "Please enter your name and Patient ID."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/login",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    patient_name: name,
+                    patient_id: patientId
+                })
+            }
+        );
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok || !result.success) {
+
+            alert(
+                result.message ||
+                "Login failed."
+            );
+
+            return;
+        }
+
+
+        // Save patient
+        window.currentPatient =
+            result.patient;
+
+
+        // Show application
+        document
+            .getElementById("loginPage")
+            .style.display = "none";
+
+        document
+            .getElementById("app")
+            .style.display = "block";
+
+
+        // Welcome name
+        const welcomeName =
+            document.getElementById("welcomeName");
+
+        if (welcomeName) {
+
+            welcomeName.innerText =
+                result.patient.name;
+
+        }
+
+
+        // Profile ID
+        const profileId =
+            document.getElementById("profileId");
+
+        if (profileId) {
+
+            profileId.innerText =
+                result.patient.patient_id ||
+                result.patient.verification_id ||
+                "Not available";
+
+        }
+
+
+        // Load database information
+        await loadPatientProfile();
+
+        await loadHistory();
+
+        await updateDashboardStats();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Login connection error:",
+            error
+        );
+
+        alert(
+            "Could not connect to the backend."
+        );
+
+    }
+
+}
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout() {
+
+    document.getElementById("app").style.display = "none";
+
+    document.getElementById("loginPage").style.display = "flex";
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function showPage(pageId, button = null) {
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page => {
+            page.classList.remove("active");
+        });
+
+
+    const target =
+        document.getElementById(pageId);
+
+    if (target) {
+        target.classList.add("active");
+    }
+
+
+    document
+        .querySelectorAll(".sidebar button")
+        .forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+
+    if (button) {
+        button.classList.add("active");
+    }
+
+
+    if (pageId === "history") {
+        loadHistory();
+    }
+
+}
+
+
+/* =====================================================
+   QUICK ACTIONS
+===================================================== */
+
+function openScanner() {
+
+    showPage("scanner");
+
+}
+
+
+function openMedicine() {
+
+    showPage("medicine");
+
+}
+
+
+/* =====================================================
+   FILE UPLOAD + PREVIEW
+===================================================== */
+
+function fileSelected(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+
+    document.getElementById("fileName").innerText =
+        "Selected: " + file.name;
+
+
+    const previewContainer =
+        document.getElementById("previewContainer");
+
+    const imagePreview =
+        document.getElementById("imagePreview");
+
+    const pdfPreview =
+        document.getElementById("pdfPreview");
+
+
+    previewContainer.style.display = "block";
+
+
+    if (file.type.startsWith("image/")) {
+
+        const reader =
+            new FileReader();
+
+        reader.onload = function(e) {
+
+            imagePreview.src = e.target.result;
+
+            imagePreview.style.display = "block";
+
+            pdfPreview.style.display = "none";
+
+        };
+
+        reader.readAsDataURL(file);
+
+    }
+
+    else if (file.type === "application/pdf") {
+
+        imagePreview.style.display = "none";
+
+        pdfPreview.style.display = "block";
+
+    }
+
+}
+
+
+/* =====================================================
+   LOAD DEMO PRESCRIPTION
+===================================================== */
+
+function loadDemo(index) {
+
+    const data =
+        demoPrescriptions[index];
+
+    if (!data) return;
+
+
+    document.getElementById("fileName").innerText =
+        "Demo document selected: " + data.id;
+
+
+    document.getElementById("previewContainer").style.display =
+        "block";
+
+
+    document.getElementById("imagePreview").style.display =
+        "none";
+
+
+    document.getElementById("pdfPreview").style.display =
+        "block";
+
+
+    document.getElementById("pdfPreview").innerHTML = `
+
+        📄 <strong>${data.id}</strong>
+
+        <br><br>
+
+        Demo prescription loaded successfully.
+
+        <br>
+
+        Click <strong>Analyze Document</strong>
+        to demonstrate OCR + AI extraction.
+
+    `;
+
+
+    window.selectedDemo = data;
+
+}
+
+
+/* =====================================================
+   ANALYZE PRESCRIPTION
+===================================================== */
+
+async function analyzePrescription() {
+
+    const fileInput =
+        document.getElementById("fileInput");
+
+    const file =
+        fileInput.files[0];
+
+
+    if (!file) {
+
+        alert(
+            "Please select a prescription or report first."
+        );
+
+        return;
+    }
+
+
+    if (!window.currentPatient) {
+
+        alert(
+            "Please log in before uploading."
+        );
+
+        return;
+    }
+
+
+    const analysis =
+        document.getElementById("analysis");
+
+    const loading =
+        document.getElementById("loading");
+
+    const analysisResult =
+        document.getElementById("analysisResult");
+
+
+    analysis.style.display = "block";
+    loading.style.display = "block";
+    analysisResult.style.display = "none";
+
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    formData.append(
+        "patient_id",
+        window.currentPatient.id
+    );
+
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/upload-prescription",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.message ||
+                "Upload failed."
+            );
+        }
+
+
+        // Refresh database history
+        await loadHistory();
+
+        await updateDashboardStats();
+
+
+        loading.style.display = "none";
+
+        analysisResult.style.display = "block";
+
+
+        alert(
+            "Prescription uploaded successfully."
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Upload error:",
+            error
+        );
+
+
+        loading.style.display = "none";
+
+
+        alert(
+            error.message ||
+            "Could not upload prescription."
+        );
+
+    }
+
+}
+
+/* =====================================================
+   SHOW ANALYSIS RESULT
+===================================================== */
+
+function showAnalysisResult(data) {
+
+    document.getElementById("resultMedicine").innerText =
+        data.medicine;
+
+    document.getElementById("resultPurpose").innerText =
+        data.purpose;
+
+    document.getElementById("resultDosage").innerText =
+        data.dosage;
+
+    document.getElementById("resultFrequency").innerText =
+        data.frequency;
+
+    document.getElementById("resultDuration").innerText =
+        data.duration;
+
+    document.getElementById("resultConfidence").innerText =
+        data.confidence;
+
+    document.getElementById("resultExplanation").innerText =
+        data.explanation;
+
+    document.getElementById("resultWarning").innerText =
+        data.warning;
+
+}
+
+
+/* =====================================================
+   PATIENT HISTORY DATABASE
+===================================================== */
+
+function getHistory() {
+
+    const history =
+        localStorage.getItem("medicareHistory");
+
+    if (!history) {
+        return [];
+    }
+
+    return JSON.parse(history);
+
+}
+
+
+function saveHistory(data) {
+
+    let history =
+        getHistory();
+
+
+    const record = {
+
+        id: data.id,
+
+        medicine: data.medicine,
+
+        purpose: data.purpose,
+
+        dosage: data.dosage,
+
+        date: new Date().toLocaleString()
+
+    };
+
+
+    history.unshift(record);
+
+
+    /*
+       Keep latest 10 records.
+    */
+
+    history =
+        history.slice(0, 10);
+
+
+    localStorage.setItem(
+        "medicareHistory",
+        JSON.stringify(history)
+    );
+
+
+    loadHistory();
+
+    updateDashboardStats();
+
+}
+
+
+/* =====================================================
+   LOAD HISTORY
+===================================================== */
+
+async function loadHistory() {
+
+    const container =
+        document.getElementById("historyContainer");
+
+
+    if (!container) return;
+
+
+    if (!window.currentPatient) {
+
+        container.innerHTML = `
+            <div class="card empty-history">
+                <h3>Please log in first</h3>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            `http://127.0.0.1:5000/api/history/${window.currentPatient.id}`
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.message ||
+                "Could not load history."
+            );
+        }
+
+
+        const history =
+            data.history;
+
+
+        if (history.length === 0) {
+
+            container.innerHTML = `
+                <div class="card empty-history">
+                    📋
+                    <h3>No prescription history yet</h3>
+                    <p>
+                        Upload a prescription to create
+                        your first record.
+                    </p>
+                </div>
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML =
+            history.map(item => `
+
+        <div class="history-item">
+
+            <div>
+
+                <strong>
+                    📄 ${item.original_name}
+                </strong>
+
+                <br>
+
+                <small>
+                    File Type:
+                    ${item.type.toUpperCase()}
+                </small>
+
+                <br>
+
+                <small>
+                    Uploaded:
+                    ${item.uploaded_at}
+                </small>
+
+            </div>
+
+
+            <div>
+
+                <button
+                    onclick="viewPrescription('${item.stored_name}')"
+                >
+                    View
+                </button>
+
+
+                <button
+                    onclick="deletePrescription(${item.id})"
+                >
+                    Delete
+                </button>
+
+            </div>
+
+        </div>
+
+    `).join("");
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "History error:",
+            error
+        );
+
+
+        container.innerHTML = `
+            <div class="card empty-history">
+                ❌
+                <h3>Could not load history</h3>
+                <p>${error.message}</p>
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   DASHBOARD STATISTICS
+===================================================== */
+
+async function updateDashboardStats() {
+
+    if (!window.currentPatient) return;
+
+
+    try {
+
+        const response = await fetch(
+            `http://127.0.0.1:5000/api/history/${window.currentPatient.id}`
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if (!data.success) return;
+
+
+        const history =
+            data.history;
+
+
+        const medicineCount =
+            document.getElementById("medicineCount");
+
+
+        const reportCount =
+            document.getElementById("reportCount");
+
+
+        if (medicineCount) {
+
+            medicineCount.innerText =
+                history.length;
+
+        }
+
+
+        if (reportCount) {
+
+            reportCount.innerText =
+                history.length;
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Statistics error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   medicine IDENTIFICATION
+===================================================== */
+
+async function identifyMedicine() {
+
+    const query =
+        document
+            .getElementById("medicineCode")
+            .value
+            .trim();
+
+
+    const result =
+        document.getElementById("medicineResult");
+
+
+    if (!query) {
+
+        alert(
+            "Enter a medicine name or medicine code."
+        );
+
+        return;
+    }
+
+
+    result.style.display = "block";
+
+    result.innerHTML = `
+        <div class="safe-box">
+            🔎 Searching medicine database...
+        </div>
+    `;
+
+
+    try {
+
+        const response = await fetch(
+            `http://127.0.0.1:5000/api/medicines/search?q=${encodeURIComponent(query)}`
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.message ||
+                "Medicine search failed."
+            );
+        }
+
+
+        if (data.count === 0) {
+
+            result.innerHTML = `
+                <div class="warning">
+
+                    <strong>
+                        ❌ No medicine found
+                    </strong>
+
+                    <p>
+                        Try another medicine name
+                        or medicine code.
+                    </p>
+
+                </div>
+            `;
+
+            return;
+        }
+
+
+        result.innerHTML =
+            data.medicines.map(
+                medicine => `
+
+                <div class="medicine-result-card">
+
+                    <div class="medicine-header">
+
+                        <div class="medicine-icon">
+                            💊
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                ${medicine.name}
+                            </h2>
+
+                            <p>
+                                ${medicine.manufacturer || "Manufacturer not available"}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-grid">
+
+                        <div class="info-item">
+
+                            <span>
+                                Medicine Code
+                            </span>
+
+                            <strong>
+                                ${medicine.code}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span>
+                                Type
+                            </span>
+
+                            <strong>
+                                ${medicine.type || "Not available"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span>
+                                General Purpose
+                            </span>
+
+                            <strong>
+                                ${medicine.purpose || "Not available"}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="warning">
+
+                        ⚠️
+
+                        <strong>
+                            Safety:
+                        </strong>
+
+                        ${medicine.warning || "No warning available."}
+
+                    </div>
+
+                </div>
+
+            `
+            ).join("");
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Medicine search error:",
+            error
+        );
+
+
+        result.innerHTML = `
+            <div class="warning">
+
+                <strong>
+                    ❌ Search failed
+                </strong>
+
+                <p>
+                    ${error.message}
+                </p>
+
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   INITIALIZATION
+===================================================== */
+
+window.addEventListener("load", function() {
+
+    updateDashboardStats();
+
+});
+
+async function loadPatientProfile() {
+
+    if (!window.currentPatient) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `http://127.0.0.1:5000/api/patient/${window.currentPatient.id}`
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(
+                data.message || "Could not load profile."
+            );
+        }
+
+        const patient = data.patient;
+
+
+        // Name
+        const profileNameInput =
+            document.getElementById(
+            "profileNameInput"
+        );
+
+        if (profileNameInput) {
+
+            profileNameInput.value =
+            patient.name || "";
+
+        }
+
+
+        // Verification ID
+        const profileId =
+            document.getElementById("profileId");
+
+        if (profileId) {
+
+            profileId.innerText =
+                patient.patient_id ||
+                patient.verification_id ||
+                "Not available";
+
+        }
+
+
+        // Optional profile fields
+        const profileEmail =
+            document.getElementById("profileEmail");
+
+        if (profileEmail) {
+            profileEmail.value =
+                patient.email || "";
+        }
+
+
+        const profilePhone =
+            document.getElementById("profilePhone");
+
+        if (profilePhone) {
+            profilePhone.value =
+                patient.phone || "";
+        }
+
+
+        const profileAge =
+            document.getElementById("profileAge");
+
+        if (profileAge) {
+            profileAge.value =
+                patient.age || "";
+        }
+
+
+        const profileGender =
+            document.getElementById("profileGender");
+
+        if (profileGender) {
+            profileGender.value =
+                patient.gender || "";
+        }
+
+
+        const profileBloodGroup =
+            document.getElementById("profileBloodGroup");
+
+        if (profileBloodGroup) {
+            profileBloodGroup.value =
+                patient.blood_group || "";
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Profile error:",
+            error
+        );
+
+    }
+
+}
+
+async function savePatientProfile() {
+
+    if (!window.currentPatient) {
+
+        alert(
+            "Please log in first."
+        );
+
+        return;
+    }
+
+    const age =
+        document
+            .getElementById("profileAge")
+            .value
+            .trim();
+
+
+    const gender =
+        document
+            .getElementById("profileGender")
+            .value
+            .trim();
+
+
+    const phone =
+        document
+            .getElementById("profilePhone")
+            .value
+            .trim();
+
+
+    if (!age || !gender || !phone) {
+
+        alert(
+            "Please fill in Age, Gender and Phone Number."
+        );
+
+        return;
+    }
+
+
+const profile = {
+
+    email:
+        document.getElementById(
+            "profileEmail"
+        )?.value.trim() || "",
+
+    phone:
+        document.getElementById(
+            "profilePhone"
+        )?.value.trim() || "",
+
+    age:
+        document.getElementById(
+            "profileAge"
+        )?.value || "",
+
+    gender:
+        document.getElementById(
+            "profileGender"
+        )?.value.trim() || "",
+
+    blood_group:
+        document.getElementById(
+            "profileBloodGroup"
+        )?.value.trim() || ""
+
+};
+
+
+    try {
+
+        const response = await fetch(
+
+            `http://127.0.0.1:5000/api/patient/${window.currentPatient.id}`,
+
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(profile)
+            }
+
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.message ||
+                "Could not update profile."
+            );
+        }
+
+
+        alert(
+            "Profile saved successfully."
+        );
+
+
+        // Reload profile from database
+        await loadPatientProfile();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Profile update error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Could not connect to the backend."
+        );
+
+    }
+
+}
+
+
+function showRegister() {
+
+    document.getElementById(
+        "loginForm"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "registerForm"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "authTitle"
+    ).innerText =
+        "Create Your Patient ID";
+
+
+    document.getElementById(
+        "authSubtitle"
+    ).innerText =
+        "Register with MediCare to get your unique Patient ID.";
+
+}
+
+
+function showLogin() {
+
+    document.getElementById(
+        "registerForm"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "loginForm"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "authTitle"
+    ).innerText =
+        "Welcome to MediCare";
+
+
+    document.getElementById(
+        "authSubtitle"
+    ).innerText =
+        "Secure access to your medication assistance dashboard.";
+
+}
+
+async function registerPatient() {
+
+    const name =
+        document
+            .getElementById("registerName")
+            .value
+            .trim();
+
+    if (!name) {
+
+        alert(
+            "Please enter your name."
+        );
+
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/register",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    patient_name: name
+                })
+            }
+        );
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok ||
+            !result.success) {
+
+            alert(
+                result.message ||
+                "Registration failed."
+            );
+
+            return;
+        }
+
+
+        // Save newly created patient
+        window.currentPatient =
+            result.patient;
+
+
+        // Show generated Patient ID
+        alert(
+            "Registration successful!\n\n" +
+            "Your Patient ID is: " +
+            result.patient.patient_id +
+            "\n\nPlease save this ID for future login."
+        );
+
+
+        // Open dashboard
+        document.getElementById(
+            "loginPage"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "app"
+        ).style.display = "block";
+
+
+        // Set dashboard name
+        document.getElementById(
+            "welcomeName"
+        ).innerText =
+            result.patient.name;
+
+
+        // Set profile name
+        document.getElementById(
+            "profileNameInput"
+        ).value =
+            result.patient.name;
+
+
+        // Set profile ID
+        document.getElementById(
+            "profileId"
+        ).innerText =
+            result.patient.patient_id;
+
+
+        // Load patient information
+        await loadPatientProfile();
+
+        await loadHistory();
+
+        await updateDashboardStats();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Registration error:",
+            error
+        );
+
+        alert(
+            "Registration succeeded, but the page could not finish loading the patient profile."
+        );
+    }
+
+}
+
+
+
+</script>
+
+</body>
+</html>
